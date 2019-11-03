@@ -8,18 +8,34 @@
             android:label="@string/app_name"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:fullBackupContent="@xml/backup_descriptor"
             android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
         <activity
-                android:name=".MainActivity"
+                android:name=".LoginActivity"
                 android:label="@string/app_name"
                 android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <!-- Making app indexable -->
+            <intent-filter android:label="deep_link">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "https://www.sstc.ac.in/placements/app” -->
+                <data
+                        android:host="www.sstc.ac.in"
+                        android:pathPrefix="/placements/app"
+                        android:scheme="https" />
+            </intent-filter>
         </activity>
+        <activity
+                android:name=".MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

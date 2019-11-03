@@ -1,7 +1,6 @@
 package com.nva.tpcell
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -9,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.android.synthetic.main.activity_login.*
@@ -22,10 +22,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         // Buttons
-        var etEmail = findViewById<EditText>(R.id.et_email)
-        var etPassword = findViewById<EditText>(R.id.et_password)
-        var btnRegister = findViewById<Button>(R.id.btn_register)
-        var btnLogin = findViewById<Button>(R.id.btn_login)
+        val etEmail = findViewById<EditText>(R.id.et_email)
+        val etPassword = findViewById<EditText>(R.id.et_password)
+        val btnRegister = findViewById<Button>(R.id.btn_register)
+        val btnLogin = findViewById<Button>(R.id.btn_login)
         var loadingGif = findViewById<ProgressBar>(R.id.loading_gif)
 
         btnLogin.setOnClickListener {
@@ -63,6 +63,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // showProgressDialog()
+
         loading_gif.visibility = View.VISIBLE
 
         // [START create_user_with_email]
@@ -189,6 +190,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
+        Toast.makeText(this, "Signed in", Toast.LENGTH_LONG).show()
         /*
         hideProgressDialog()
         if (user != null) {
