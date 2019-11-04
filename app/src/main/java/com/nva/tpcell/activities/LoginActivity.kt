@@ -1,4 +1,4 @@
-package com.nva.tpcell
+package com.nva.tpcell.activities
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.nva.tpcell.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 
