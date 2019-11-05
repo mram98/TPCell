@@ -102,9 +102,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginStart="5dp"
-                    android:text="Personal Details"
+                    android:text="@string/personal_details"
                     android:textColor="#00574B"
-                    android:textSize="15dp" />
+                    android:textSize="15sp" />
 
             <TextView
                     android:id="@+id/contact"
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/pde"
                     android:layout_marginStart="10dp"
-                    android:text="Contact"
+                    android:text="@string/contact"
                     android:textSize="20sp" />
 
             <TextView
@@ -130,7 +130,7 @@
                     android:id="@+id/edit1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginRight="16dp"
@@ -144,7 +144,7 @@
                     android:layout_below="@+id/mobile"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="EmailID"
+                    android:text="@string/email_id"
                     android:textSize="20sp" />
 
             <TextView
@@ -154,7 +154,7 @@
                     android:layout_below="@+id/eid"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="1dp"
-                    android:text="mobileNo."
+                    android:text="eid"
                     android:textColor="#000000"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -199,7 +199,7 @@
                     android:layout_below="@id/email"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Branch"
+                    android:text="@string/branch"
                     android:textSize="20sp" />
 
             <TextView
@@ -220,7 +220,7 @@
                     android:layout_below="@id/field"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="UniversityID"
+                    android:text="@string/university_id"
                     android:textSize="20sp" />
 
             <TextView
@@ -241,7 +241,7 @@
                     android:layout_below="@+id/uni"
                     android:layout_marginStart="5dp"
                     android:paddingTop="10dp"
-                    android:text="Qualification"
+                    android:text="@string/qualification"
                     android:textColor="#00574B"
                     android:textSize="15dp" />
 
@@ -263,7 +263,7 @@
                     android:layout_below="@id/qual"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="10th Percentage"
+                    android:text="@string/tenth_percent"
                     android:textSize="20sp" />
 
             <TextView
@@ -284,7 +284,7 @@
                     android:layout_below="@id/qual"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="12th Percentage"
+                    android:text="@string/twelth_percent"
                     android:textSize="20sp" />
 
             <TextView
@@ -305,7 +305,7 @@
                     android:layout_below="@id/qual"
                     android:layout_marginStart="10dp"
                     android:layout_marginTop="10dp"
-                    android:text="Aggregate"
+                    android:text="@string/aggregate"
                     android:textSize="20sp" />
 
             <TextView
