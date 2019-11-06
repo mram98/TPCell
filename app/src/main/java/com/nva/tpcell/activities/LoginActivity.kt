@@ -1,223 +1,93 @@
 package com.nva.tpcell.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.nva.tpcell.BuildConfig
 import com.nva.tpcell.R
-import kotlinx.android.synthetic.main.activity_login.*
 
 
 class LoginActivity : AppCompatActivity() {
-    private lateinit var auth: FirebaseAuth
+    private val RC_SIGN_IN = 123
+    lateinit var auth: FirebaseAuth
+
+    fun showSnackbar(id: Int) {
+        Snackbar.make(
+            findViewById(R.id.login_container),
+            resources.getString(id),
+            Snackbar.LENGTH_LONG
+        ).show()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        // Buttons
-        val etEmail = findViewById<EditText>(R.id.et_email)
-        val etPassword = findViewById<EditText>(R.id.et_password)
-        val btnRegister = findViewById<Button>(R.id.btn_register)
-        val btnLogin = findViewById<Button>(R.id.btn_login)
-        var loadingGif = findViewById<ProgressBar>(R.id.loading_gif)
-
-        btnLogin.setOnClickListener {
-            val email = etEmail.text
-            val password = etPassword.text
-            signIn(email.toString(), password.toString())
-        }
-
-        btnRegister.setOnClickListener {
-            val email = etEmail.text
-            val password = etPassword.text
-            createAccount(email.toString(), password.toString())
-        }
-        //emailSignInButton.setOnClickListener(this)
-        //emailCreateAccountButton.setOnClickListener(this)
-        //signOutButton.setOnClickListener(this)
-        //verifyEmailButton.setOnClickListener(this)
-
-        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
+        if (false) {
 
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        updateUI(currentUser)
-    }
-
-    private fun createAccount(email: String, password: String) {
-        Log.d(TAG, "createAccount:$email")
-        if (!validateForm()) {
-            return
-        }
-
-        // showProgressDialog()
-
-        loading_gif.visibility = View.VISIBLE
-
-        // [START create_user_with_email]
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUI(null)
-                }
-
-                // [START_EXCLUDE]
-                //hideProgressDialog()
-                loading_gif.visibility = View.INVISIBLE
-                // [END_EXCLUDE]
-            }
-        // [END create_user_with_email]
-    }
-
-    private fun signIn(email: String, password: String) {
-        Log.d(TAG, "signIn:$email")
-        if (!validateForm()) {
-            return
-        }
-
-
-        //showProgressDialog()
-        loading_gif.visibility = View.VISIBLE
-
-        // [START sign_in_with_email]
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(TAG, "signInWithEmail:success")
-                    val user = auth.currentUser
-                    updateUI(user)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(
-                        baseContext, "Authentication failed.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    updateUI(null)
-                }
-
-                // [START_EXCLUDE]
-                if (!task.isSuccessful) {
-                    //status.setText(R.string.auth_failed)
-                    Toast.makeText(this, "Auth Failed", Toast.LENGTH_LONG).show()
-                }
-                //hideProgressDialog()
-                loading_gif.visibility = View.INVISIBLE
-                // [END_EXCLUDE]
-            }
-        // [END sign_in_with_email]
-    }
-
-    private fun signOut() {
-        auth.signOut()
-        updateUI(null)
-    }
-
-    /*
-    private fun sendEmailVerification() {
-        // Disable button
-        verifyEmailButton.isEnabled = false
-
-        // Send verification email
-        // [START send_email_verification]
-        val user = auth.currentUser
-        user?.sendEmailVerification()
-            ?.addOnCompleteListener(this) { task ->
-                // [START_EXCLUDE]
-                // Re-enable button
-                verifyEmailButton.isEnabled = true
-
-                if (task.isSuccessful) {
-                    Toast.makeText(baseContext,
-                        "Verification email sent to ${user.email} ",
-                        Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.e(TAG, "sendEmailVerification", task.exception)
-                    Toast.makeText(baseContext,
-                        "Failed to send verification email.",
-                        Toast.LENGTH_SHORT).show()
-                }
-                // [END_EXCLUDE]
-            }
-        // [END send_email_verification]
-    }
-    */
-
-    private fun validateForm(): Boolean {
-        var valid = true
-
-        val email = et_email.text.toString()
-        if (TextUtils.isEmpty(email)) {
-            et_email.error = "Required."
-            valid = false
+            //If user is signed in, start Activity
+            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         } else {
-            et_email.error = null
-        }
 
-        val password = et_password.text.toString()
-        if (TextUtils.isEmpty(password)) {
-            et_password.error = "Required."
-            valid = false
-        } else {
-            et_password.error = null
-        }
+            // Firebase AuthUI Implementation
+            val providers = arrayListOf(
+                AuthUI.IdpConfig.EmailBuilder().build()
+                //,AuthUI.IdpConfig.GoogleBuilder().build()
+            )
 
-        return valid
+            startActivityForResult(
+                AuthUI.getInstance()
+                    .createSignInIntentBuilder()
+                    .setIsSmartLockEnabled(!BuildConfig.DEBUG)
+                    .setAvailableProviders(providers)
+                    .setTosUrl("link to app terms and service")
+                    .setPrivacyPolicyUrl("link to app privacy policy")
+                    .build(), RC_SIGN_IN
+            )
+        }
     }
 
-    private fun updateUI(user: FirebaseUser?) {
-        Toast.makeText(this, "Signed in", Toast.LENGTH_LONG).show()
-        /*
-        hideProgressDialog()
-        if (user != null) {
-            status.text = getString(R.string.emailpassword_status_fmt,
-                user.email, user.isEmailVerified)
-            detail.text = getString(R.string.firebase_status_fmt, user.uid)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RC_SIGN_IN) {
 
-            emailPasswordButtons.visibility = View.GONE
-            emailPasswordFields.visibility = View.GONE
-            signedInButtons.visibility = View.VISIBLE
+            val response = IdpResponse.fromResultIntent(data)
+            if (resultCode == Activity.RESULT_OK) {
 
-            verifyEmailButton.isEnabled = !user.isEmailVerified
-        } else {
-            status.setText(R.string.signed_out)
-            detail.text = null
-
-            emailPasswordButtons.visibility = View.VISIBLE
-            emailPasswordFields.visibility = View.VISIBLE
-            signedInButtons.visibility = View.GONE
+                // if the User sign in was successful, start Activity
+                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                startActivity(intent)
+                showSnackbar(R.string.signed_in)
+                finish()
+                return
+            } else {
+                if (response == null) {
+                    //If no response from the Server
+                    showSnackbar(R.string.sign_in_cancelled)
+                    return
+                } else {
+                    showSnackbar(R.string.unknown_error)
+                    return
+                }
+//                if (response.errorCode == ErrorCodes.NO_NETWORK) {
+//                    //If there was a network problem the user's phone
+//                    showSnackbar(R.string.no_internet_connection)
+//                    return
+//                }
+//                if (response.errorCode == ErrorCodes.UNKNOWN_ERROR) {
+//                    //If the error cause was unknown
+//                    showSnackbar(R.string.unknown_error)
+//                    return
+//                }
+            }
         }
-
-         */
+        showSnackbar(R.string.unknown_sign_in_response) //if the sign in response was unknown
     }
-
-    companion object {
-        private const val TAG = "EmailPassword"
-    }
-
 }

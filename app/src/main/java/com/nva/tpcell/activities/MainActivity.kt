@@ -8,13 +8,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
 import com.nva.tpcell.R
+import com.nva.tpcell.fragments.DriveDetailsFragment
+import com.nva.tpcell.fragments.DrivesFragment
+import com.nva.tpcell.fragments.StudentDetailsFragment
+import com.nva.tpcell.fragments.StudentsFragment
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
+    lateinit var studentsFragment: StudentsFragment
+    lateinit var drivesFragment: DrivesFragment
+    lateinit var studentDetailsFragment: StudentDetailsFragment
+    lateinit var driveDetailsFragment: DriveDetailsFragment
+//    lateinit var settingsFragment: SettingsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,11 +30,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
+//        val fab: FloatingActionButton = findViewById(R.id.fab)
+//        fab.setOnClickListener { view ->
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show()
+//        }
+
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -40,6 +49,18 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         toggle.syncState()
 
         navView.setNavigationItemSelectedListener(this)
+
+        //drivesFragment =
+
+        //Identify User
+        val user = FirebaseAuth.getInstance().currentUser
+
+        // Transfer it to Nav Drawer
+//        val navUserText: TextView = findViewById(R.id.nav_user_text)
+        //      navUserText.setText(user.toString())
+        //Log.d("Find me", user.toString())
+
+
     }
 
     override fun onBackPressed() {
@@ -70,22 +91,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
-            R.id.nav_home -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
+            R.id.nav_drives -> {
 
             }
-            R.id.nav_slideshow -> {
+            R.id.nav_students -> {
 
             }
-            R.id.nav_tools -> {
+            R.id.nav_profile -> {
 
             }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
+            R.id.nav_settings -> {
 
             }
         }

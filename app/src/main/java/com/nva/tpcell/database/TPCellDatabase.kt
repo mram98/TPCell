@@ -11,6 +11,19 @@ class TPCellDatabase {
     val db = FirebaseFirestore.getInstance()
     val dbStudentRef = db.collection("students")
 
+    val stringStudentFields = arrayOf(
+        "email",
+        "institute_id",
+        "session_year",
+        "enroll",
+        "name",
+        "course",
+        "branch",
+        "phone"
+    )
+    val numberStudentFields =
+        arrayOf("aggregate_10th", "aggregate_12th", "aggregate_college", "backlog", "gap_years")
+
     private fun unpackStudent(student: Student): HashMap<String, Serializable?> {
         // Converts object to HashMap
         return hashMapOf(
@@ -30,7 +43,7 @@ class TPCellDatabase {
         )
     }
 
-    fun addStudent(context: Context, student: Student) {
+    fun addStudentObject(context: Context, student: Student) {
 
         // Making HashMap from Student object
         val studentData = unpackStudent(student)
@@ -73,7 +86,11 @@ class TPCellDatabase {
 
         // TODO Fix Double Toast here
         deleteStudent(context, student.email)
-        addStudent(context, student)
+        addStudentObject(context, student)
+
+    }
+
+    fun updateStudentField(field: String, value: String) {
 
     }
 
