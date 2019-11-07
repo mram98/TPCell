@@ -1,15 +1,17 @@
-package com.nva.tpcell.database
+package com.nva.tpcell.utils
 
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import com.nva.tpcell.models.Student
 import java.io.Serializable
 
 class TPCellDatabase {
     val db = FirebaseFirestore.getInstance()
-    val dbStudentRef = db.collection("students")
+    val dbStudentsRef = db.collection("students")
+    val dbAdminsRef = db.collection("admins")
 
     val stringStudentFields = arrayOf(
         "email",
@@ -49,7 +51,7 @@ class TPCellDatabase {
         val studentData = unpackStudent(student)
 
         // Writing document with email as ID and hashmap as data
-        dbStudentRef.document(student.email)
+        dbStudentsRef.document(student.email)
             .set(studentData)
             .addOnSuccessListener {
                 Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
@@ -61,7 +63,7 @@ class TPCellDatabase {
 
     fun deleteStudent(context: Context, email: String) {
 
-        dbStudentRef.document(email)
+        dbStudentsRef.document(email)
             .delete()
             .addOnSuccessListener {
                 Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
@@ -74,7 +76,7 @@ class TPCellDatabase {
     fun updateStudent(context: Context, student: Student) {
 
         // Delete the original document
-//        dbStudentRef.document(student.email)
+//        dbStudentsRef.document(student.email)
 //            .delete()
 //            .addOnSuccessListener {
 //                // Add the student again if deletion is successful
@@ -94,6 +96,23 @@ class TPCellDatabase {
 
     }
 
+    fun checkAdmin(email: String?): Boolean {
+        var isAdmin = false
+        if (email != null) {
+            dbAdminsRef.document(email).get()
+                .addOnSuccessListener { document ->
+                    if (document != null) {
+                        isAdmin = true
+                        //Log.d(TAG, "DocumentSnapshot data: ${document.data}")
+                    }
+                }
+                .addOnFailureListener { exception ->
+                    Log.d(TAG, "get failed with ", exception)
+                }
+        }
+        return isAdmin
+    }
+
     fun filterStudent(
         aggregate_10th: Number,
         aggregate_12th: Number,
@@ -103,7 +122,7 @@ class TPCellDatabase {
     ) {
 
         // Potentially add branch and course here
-        val query = dbStudentRef.whereGreaterThanOrEqualTo("aggregate_10th", aggregate_10th)
+        val query = dbStudentsRef.whereGreaterThanOrEqualTo("aggregate_10th", aggregate_10th)
             .whereGreaterThanOrEqualTo("aggregate_12th", aggregate_12th)
             .whereGreaterThanOrEqualTo("aggregate_college", aggregate_college)
             .whereGreaterThanOrEqualTo("backlog", backlog)
@@ -123,7 +142,7 @@ class TPCellDatabase {
 
         val studentData: Student? = null
 
-        dbStudentRef.document(email)
+        dbStudentsRef.document(email)
             .get()
             .addOnSuccessListener { documentSnapshot ->
                 var studentData = documentSnapshot.toObject(Student::class.java)

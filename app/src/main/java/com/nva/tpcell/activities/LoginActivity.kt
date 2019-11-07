@@ -28,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         auth = FirebaseAuth.getInstance()
-        if (false) {
+        if (auth.currentUser != null) {
 
             //If user is signed in, start Activity
             val intent = Intent(this@LoginActivity, MainActivity::class.java)
@@ -70,7 +70,8 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 if (response == null) {
                     //If no response from the Server
-                    showSnackbar(R.string.sign_in_cancelled)
+                    //showSnackbar(R.string.sign_in_cancelled)
+                    finish()
                     return
                 } else {
                     showSnackbar(R.string.unknown_error)

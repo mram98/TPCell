@@ -1,13 +1,17 @@
 package com.nva.tpcell.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
+
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.nva.tpcell.R
@@ -15,6 +19,7 @@ import com.nva.tpcell.fragments.DriveDetailsFragment
 import com.nva.tpcell.fragments.DrivesFragment
 import com.nva.tpcell.fragments.StudentDetailsFragment
 import com.nva.tpcell.fragments.StudentsFragment
+import com.nva.tpcell.utils.TPCellDatabase
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -22,6 +27,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var drivesFragment: DrivesFragment
     lateinit var studentDetailsFragment: StudentDetailsFragment
     lateinit var driveDetailsFragment: DriveDetailsFragment
+
+    lateinit var dbTPCellDatabase: TPCellDatabase
+
 //    lateinit var settingsFragment: SettingsFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,14 +38,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-//        val fab: FloatingActionButton = findViewById(R.id.fab)
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                .setAction("Action", null).show()
-//        }
-
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
+
         val toggle = ActionBarDrawerToggle(
             this,
             drawerLayout,
@@ -50,16 +53,26 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         navView.setNavigationItemSelectedListener(this)
 
-        //drivesFragment =
-
-        //Identify User
+        // Identifying User
         val user = FirebaseAuth.getInstance().currentUser
+        val isUserAdmin = dbTPCellDatabase.checkAdmin(user?.email)
 
-        // Transfer it to Nav Drawer
-//        val navUserText: TextView = findViewById(R.id.nav_user_text)
-        //      navUserText.setText(user.toString())
-        //Log.d("Find me", user.toString())
+        // Getting Nav Header TextView
+        val navHeaderView = navView.getHeaderView(0)
+        val navHeaderUserText: TextView = navHeaderView.findViewById(R.id.nav_user_text)
 
+        // Putting Email in Nav Header
+        navHeaderUserText.text = user?.email
+
+        // Getting Nav Menu Items - Profile and Students
+        val studentsMenuItem = navView.menu.findItem(R.id.nav_students)
+        val profileMenuItem = navView.menu.findItem(R.id.nav_profile)
+
+        // If user is an Admin, change Nav Menu Items
+        if (isUserAdmin) {
+            studentsMenuItem.isVisible = true
+            profileMenuItem.isVisible = false
+        }
 
     }
 
@@ -101,6 +114,17 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.nav_settings -> {
+
+            }
+            R.id.nav_logout -> {
+
+                val auth = FirebaseAuth.getInstance()
+                auth.signOut()
+
+                val intent = Intent(this@MainActivity, LoginActivity::class.java)
+                startActivity(intent)
+
+                finish()
 
             }
         }

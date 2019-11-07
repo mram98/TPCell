@@ -1,4 +1,4 @@
-package com.nva.tpcell.fragments
+package com.nva.tpcell.adapters
 
 
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nva.tpcell.R
 import com.nva.tpcell.fragments.DrivesFragment.OnListFragmentInteractionListener
 import com.nva.tpcell.fragments.dummy.DummyContent.DummyItem
-import kotlinx.android.synthetic.main.fragment_drive.view.*
+import kotlinx.android.synthetic.main.item_drive_row.view.*
 
 /**
  * [RecyclerView.Adapter] that can display a [DummyItem] and makes a call to the
@@ -34,7 +34,7 @@ class MyDriveRecyclerViewAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.fragment_drive, parent, false)
+            .inflate(R.layout.item_drive_row, parent, false)
         return ViewHolder(view)
     }
 

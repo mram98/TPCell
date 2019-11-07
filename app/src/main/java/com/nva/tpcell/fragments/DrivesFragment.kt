@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nva.tpcell.R
+import com.nva.tpcell.adapters.MyDriveRecyclerViewAdapter
 import com.nva.tpcell.fragments.dummy.DummyContent
 import com.nva.tpcell.fragments.dummy.DummyContent.DummyItem
 
@@ -37,7 +38,7 @@ class DrivesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_drive_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_drives_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -46,7 +47,8 @@ class DrivesFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyDriveRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                adapter =
+                    MyDriveRecyclerViewAdapter(DummyContent.ITEMS, listener)
             }
         }
         return view

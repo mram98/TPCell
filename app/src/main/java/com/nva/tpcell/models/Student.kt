@@ -1,4 +1,4 @@
-package com.nva.tpcell.database
+package com.nva.tpcell.models
 
 
 data class Student(

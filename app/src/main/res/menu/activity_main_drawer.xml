@@ -7,21 +7,26 @@
         <item
                 android:id="@+id/nav_drives"
                 android:icon="@drawable/ic_drives_black_24dp"
-                android:title="Drives" />
+                android:title="@string/nav_drives" />
         <item
                 android:id="@+id/nav_students"
                 android:icon="@drawable/ic_students_black_24dp"
-                android:title="Students"
+                android:title="@string/nav_students"
                 android:visible="false" />
         <item
                 android:id="@+id/nav_profile"
                 android:icon="@drawable/ic_profile_black_24dp"
-                android:title="Profile"
+                android:title="@string/nav_profile"
                 android:visible="true" />
         <item
                 android:id="@+id/nav_settings"
                 android:icon="@drawable/ic_settings_black_24dp"
-                android:title="Settings" />
+                android:title="@string/nav_settings" />
+
+        <item
+                android:id="@+id/nav_logout"
+                android:icon="@drawable/ic_logout_black_24dp"
+                android:title="@string/nav_logout" />
     </group>
 
     <!--    <item android:title="Communicate">-->

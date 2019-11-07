@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nva.tpcell.R
+import com.nva.tpcell.adapters.MyStudentRecyclerViewAdapter
 import com.nva.tpcell.fragments.dummy.DummyContent
 import com.nva.tpcell.fragments.dummy.DummyContent.DummyItem
 
@@ -37,7 +38,7 @@ class StudentsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_student_list, container, false)
+        val view = inflater.inflate(R.layout.fragment_students_list, container, false)
 
         // Set the adapter
         if (view is RecyclerView) {
@@ -46,7 +47,10 @@ class StudentsFragment : Fragment() {
                     columnCount <= 1 -> LinearLayoutManager(context)
                     else -> GridLayoutManager(context, columnCount)
                 }
-                adapter = MyStudentRecyclerViewAdapter(DummyContent.ITEMS, listener)
+                adapter = MyStudentRecyclerViewAdapter(
+                    DummyContent.ITEMS,
+                    listener
+                )
             }
         }
         return view
