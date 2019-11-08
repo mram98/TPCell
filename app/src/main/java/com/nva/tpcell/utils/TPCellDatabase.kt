@@ -12,6 +12,7 @@ class TPCellDatabase {
     val db = FirebaseFirestore.getInstance()
     val dbStudentsRef = db.collection("students")
     val dbAdminsRef = db.collection("admins")
+    var isUserAdmin = false
 
     val stringStudentFields = arrayOf(
         "email",
@@ -96,13 +97,12 @@ class TPCellDatabase {
 
     }
 
-    fun checkAdmin(email: String?): Boolean {
-        var isAdmin = false
+    fun checkAdmin(email: String?) {
         if (email != null) {
             dbAdminsRef.document(email).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        isAdmin = true
+                        isUserAdmin = true
                         //Log.d(TAG, "DocumentSnapshot data: ${document.data}")
                     }
                 }
@@ -110,7 +110,6 @@ class TPCellDatabase {
                     Log.d(TAG, "get failed with ", exception)
                 }
         }
-        return isAdmin
     }
 
     fun filterStudent(
@@ -138,19 +137,21 @@ class TPCellDatabase {
             }
     }
 
-    fun getStudent(context: Context, email: String): Student? {
+    fun getStudent(context: Context, email: String?): Student? {
 
-        val studentData: Student? = null
+        var studentData: Student? = null
 
-        dbStudentsRef.document(email)
-            .get()
-            .addOnSuccessListener { documentSnapshot ->
-                var studentData = documentSnapshot.toObject(Student::class.java)
-                // TODO get this data to the student fragment
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Student doesn't exist", Toast.LENGTH_LONG).show()
-            }
+        if (email != null) {
+            dbStudentsRef.document(email)
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    studentData = documentSnapshot.toObject(Student::class.java)
+                    // TODO get this data to the student fragment
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Student doesn't exist", Toast.LENGTH_LONG).show()
+                }
+        }
         return studentData
     }
 }

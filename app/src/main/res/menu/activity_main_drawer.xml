@@ -29,17 +29,22 @@
                 android:title="@string/nav_logout" />
     </group>
 
-    <!--    <item android:title="Communicate">-->
-    <!--        <menu>-->
-    <!--            <item-->
-    <!--                    android:id="@+id/nav_share"-->
-    <!--                    android:icon="@drawable/ic_menu_share"-->
-    <!--                    android:title="@string/menu_share"/>-->
-    <!--            <item-->
-    <!--                    android:id="@+id/nav_send"-->
-    <!--                    android:icon="@drawable/ic_menu_send"-->
-    <!--                    android:title="@string/menu_send"/>-->
-    <!--        </menu>-->
-    <!--    </item>-->
-
+    <!--
+    <item android:title="Contact Us">
+        <menu>
+            <item
+                    android:id="@+id/nav_dev1"
+                    android:icon="@drawable/ic_profile_black_24dp"
+                    android:title="Nishant Pillai" />
+            <item
+                    android:id="@+id/nav_dev2"
+                    android:icon="@drawable/ic_profile_black_24dp"
+                    android:title="Vijay Kumar Sahu" />
+            <item
+                    android:id="@+id/nav_dev3"
+                    android:icon="@drawable/ic_profile_black_24dp"
+                    android:title="Adil Warsi" />
+        </menu>
+    </item>
+    -->
 </menu>

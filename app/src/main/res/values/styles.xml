@@ -16,4 +16,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
 
+
+    <style name="TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <!--        <item name="hintTextAppearance">@style/HintText</item>-->
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
 </resources>
