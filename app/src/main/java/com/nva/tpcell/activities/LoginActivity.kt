@@ -10,11 +10,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.nva.tpcell.BuildConfig
 import com.nva.tpcell.R
+import com.nva.tpcell.utils.TPCellDatabase
 
 
 class LoginActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     lateinit var auth: FirebaseAuth
+
+    var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
 
     fun showSnackbar(id: Int) {
         Snackbar.make(
@@ -31,9 +34,15 @@ class LoginActivity : AppCompatActivity() {
         if (auth.currentUser != null) {
 
             //If user is signed in, start Activity
-            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-            startActivity(intent)
-            finish()
+            val user = FirebaseAuth.getInstance().currentUser
+            dbTPCellDatabase.startLogin(this, user?.email)
+            showSnackbar(R.string.signed_in)
+
+//            val intent = Intent(this@LoginActivity, MainActivity::class.java)
+//            intent.putExtra("is-user-admin",dbTPCellDatabase.isUserAdmin)
+//            Toast.makeText(this,dbTPCellDatabase.isUserAdmin.toString(),Toast.LENGTH_LONG).show()
+//            startActivity(intent)
+//            finish()
         } else {
 
             // Firebase AuthUI Implementation
@@ -61,11 +70,17 @@ class LoginActivity : AppCompatActivity() {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
 
-                // if the User sign in was successful, start Activity
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                startActivity(intent)
+                val user = FirebaseAuth.getInstance().currentUser
+                dbTPCellDatabase.checkAdmin(this, user?.email)
+                dbTPCellDatabase.startLogin(this, user?.email)
                 showSnackbar(R.string.signed_in)
-                finish()
+//                // if the User sign in was successful, start Activity
+//                val intent = Intent(this@LoginActivity, MainActivity::class.java)
+//                intent.putExtra("is-user-admin",dbTPCellDatabase.isUserAdmin)
+//                Toast.makeText(this,dbTPCellDatabase.isUserAdmin.toString(),Toast.LENGTH_LONG).show()
+//                startActivity(intent)
+//                showSnackbar(R.string.signed_in)
+//                finish()
                 return
             } else {
                 if (response == null) {

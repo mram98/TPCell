@@ -23,5 +23,21 @@
     <string name="nav_profile">Profile</string>
     <string name="nav_settings">Settings</string>
     <string name="nav_logout">Logout</string>
+    <string name="user_not_logged_in">User not found</string>
+    <string name="name_of_drive">Name of Drive</string>
+    <string name="drive_desc">Drive Description</string>
+
+    <string name="_10th_aggregate_criteria">10th Aggregate Criteria</string>
+    <string name="college_aggregate_criteria">College Aggregate Criteria</string>
+    <string name="submit">Submit</string>
+    <string name="_12th_aggregate_criteria">12th Aggregate Criteria</string>
+    <string name="name_of_student">Name</string>
+    <string name="enroll_of_student">Enroll</string>
+    <string name="_10th_aggregate">10th Aggregate</string>
+    <string name="_12th_aggregate">12th Aggregate</string>
+    <string name="college_aggregate">College Aggregate</string>
+    <string name="email_of_student">E-mail</string>
+    <string name="phone_of_student">Phone</string>
+    <string name="eligible_students">Eligible Students</string>
 
 </resources>

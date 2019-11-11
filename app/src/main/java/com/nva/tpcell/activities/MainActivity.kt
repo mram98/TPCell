@@ -14,16 +14,29 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.nva.tpcell.R
 import com.nva.tpcell.fragments.DriveDetailsFragment
 import com.nva.tpcell.fragments.DrivesFragment
 import com.nva.tpcell.fragments.StudentDetailsFragment
 import com.nva.tpcell.fragments.StudentsFragment
+import com.nva.tpcell.models.Drive
 import com.nva.tpcell.models.Student
 import com.nva.tpcell.utils.TPCellDatabase
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
-    StudentDetailsFragment.OnFragmentInteractionListener {
+    StudentDetailsFragment.OnFragmentInteractionListener,
+    DriveDetailsFragment.OnFragmentInteractionListener,
+    StudentsFragment.OnListFragmentInteractionListener,
+    DrivesFragment.OnListFragmentInteractionListener {
+    override fun onListFragmentInteraction(item: Drive?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onListFragmentInteraction(item: Student?) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun onFragmentInteraction(uri: Uri) {
 
     }
@@ -34,7 +47,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     lateinit var driveDetailsFragment: DriveDetailsFragment
 
     var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    var user: FirebaseUser? = null
     var userData: Student? = null
+
+    var isUserAdmin: Boolean = false
 
 //    lateinit var settingsFragment: SettingsFragment
 
@@ -43,6 +59,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
+
+        val bundle: Bundle? = intent.extras
+        var isUserAdmin_ARG = bundle?.getBoolean("is-user-admin")
+        if (isUserAdmin_ARG != null) {
+            isUserAdmin = isUserAdmin_ARG
+        }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -60,19 +82,21 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         navView.setNavigationItemSelectedListener(this)
 
         // Identifying User
-        val user = FirebaseAuth.getInstance().currentUser
-        dbTPCellDatabase.checkAdmin(user?.email)
+        user = FirebaseAuth.getInstance().currentUser
 
+        // TODO this function doesn't work
+
+        //dbTPCellDatabase.checkAdmin(this, user?.email)
+        //dbTPCellDatabase.getStudent(this, user?.email)
 
         // Getting Nav Header TextViews
         val navHeaderView = navView.getHeaderView(0)
-        val navHeaderUserEmail: TextView = navHeaderView.findViewById(R.id.nav_user_email)
         // Putting Email in Nav Header
-        navHeaderUserEmail.text = user?.email
+        val navHeaderUserEmail: TextView = navHeaderView.findViewById(R.id.nav_user_email)
+        val navHeaderUserName: TextView = navHeaderView.findViewById(R.id.nav_user_name)
 
-        // TODO Only one TextView is working, either User Name or Email
-        //val navHeaderUserName: TextView = navHeaderView.findViewById(R.id.nav_user_name)
-        //navHeaderUserName.text = user?.displayName
+        navHeaderUserEmail.text = user?.email
+        navHeaderUserName.text = user?.displayName
 
         // Getting Nav Menu Items - Profile, Students, Drives
         val profileMenuItem = navView.menu.findItem(R.id.nav_profile)
@@ -80,30 +104,32 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drivesMenuItem = navView.menu.findItem(R.id.nav_drives)
 
 
-        // If user is an Admin, change Nav Menu Items and getStudentData
-        if (dbTPCellDatabase.isUserAdmin) {
+        // If user is an Admin, change Nav Menu Items and create StudentsFragment,
+        // else create StudentDetailsFragment with current user data
+        if (isUserAdmin) {
             studentsMenuItem.isVisible = true
             profileMenuItem.isVisible = false
-            userData = dbTPCellDatabase.getStudent(this, user?.email)
+
+        } else {
+            studentsMenuItem.isVisible = false
+            profileMenuItem.isVisible = true
+
+            dbTPCellDatabase.getStudent(this, user?.email)
+            //studentDetailsFragment = StudentDetailsFragment.newInstance(userData?)
         }
+
 
         // Default Menu Item is Drives, if activity just launched, select drives menu and launch its fragment
+        drivesFragment = DrivesFragment.newInstance(isUserAdmin)
+
         if (savedInstanceState == null) {
             drivesMenuItem.isChecked = true
-            //navView.menu.performIdentifierAction(R.id.nav_drives,0)
-//            supportFragmentManager
-//                .beginTransaction()
-//                .add(R.id.container, drivesFragment)
-//                .addToBackStack(drivesFragment.toString())
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-//                .commit()
+            supportFragmentManager
+                .beginTransaction()
+                .add(R.id.container, drivesFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
         }
-
-        // TODO Change this
-        drivesFragment = DrivesFragment.newInstance(1)
-        studentsFragment = StudentsFragment.newInstance(1)
-        //studentDetailsFragment = StudentDetailsFragment.newInstance(userData)
-
     }
 
     override fun onBackPressed() {
@@ -135,33 +161,54 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_drives -> {
+                drivesFragment = DrivesFragment.newInstance(isUserAdmin)
 
                 supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.container, drivesFragment)
-                    .addToBackStack(drivesFragment.toString())
+//                    .addToBackStack(drivesFragment.toString())
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                     .commit()
 
             }
             R.id.nav_students -> {
 
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, studentsFragment)
-                    .addToBackStack(studentsFragment.toString())
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit()
+                studentsFragment = StudentsFragment.newInstance(isUserAdmin)
+
+                if (isUserAdmin) {
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, studentsFragment)
+//                    .addToBackStack(studentsFragment.toString())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
 
             }
             R.id.nav_profile -> {
 
-                supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.container, studentDetailsFragment)
-                    .addToBackStack(studentDetailsFragment.toString())
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .commit()
+                if ((!isUserAdmin) && (user?.email != null)) {
+
+                    var studentDataArg: Student? = null
+
+                    studentDataArg = if (dbTPCellDatabase.studentData == null) {
+                        Student(user?.email!!)
+                    } else {
+                        dbTPCellDatabase.studentData
+                    }
+                    studentDetailsFragment =
+                        StudentDetailsFragment.newInstance(
+                            isUserAdmin,
+                            studentDataArg!!
+                        )
+
+                    supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.container, studentDetailsFragment)
+//                    .addToBackStack(studentDetailsFragment.toString())
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                        .commit()
+                }
 
             }
             R.id.nav_settings -> {

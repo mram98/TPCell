@@ -5,17 +5,13 @@ import android.os.Parcelable
 
 data class Drive(
     //only email compulsory for now, may change later
-    val name: String? = null,
-    val desc: String? = null,
-    val aggregate_10th: String? = null,
-    val aggregate_12th: String? = null,
-    val aggregate_college: String? = null,
-    val backlog: String? = null,
-    val gap_years: String? = null
+    val name: String = "",
+    val desc: String = "",
+    val aggregate_10th: String = "",
+    val aggregate_12th: String = "",
+    val aggregate_college: String = ""
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readString(),
-        parcel.readString(),
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
@@ -29,8 +25,6 @@ data class Drive(
         parcel.writeString(aggregate_10th)
         parcel.writeString(aggregate_12th)
         parcel.writeString(aggregate_college)
-        parcel.writeString(backlog)
-        parcel.writeString(gap_years)
     }
 
     override fun describeContents(): Int {
@@ -46,4 +40,5 @@ data class Drive(
             return arrayOfNulls(size)
         }
     }
+
 }

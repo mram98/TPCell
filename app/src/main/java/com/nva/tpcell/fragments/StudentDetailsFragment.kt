@@ -6,13 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.nva.tpcell.R
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.nva.tpcell.models.Student
+import com.nva.tpcell.utils.TPCellDatabase
 
 /**
  * A simple [Fragment] subclass.
@@ -23,16 +22,17 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class StudentDetailsFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    private var studentData: Student? = null
+    private var isUserAdmin: Boolean? = null
     private var listener: OnFragmentInteractionListener? = null
+    var dbTPCellDatabase = TPCellDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            isUserAdmin = it.getBoolean(IS_USER_ADMIN)
+            studentData = it.getParcelable(STUDENT_OBJECT)
         }
     }
 
@@ -41,7 +41,41 @@ class StudentDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_student_details, container, false)
+        val inf = inflater.inflate(R.layout.fragment_student_details, container, false)
+
+        val studentName = inf.findViewById<EditText>(R.id.student_name)
+        studentName.setText(studentData?.name)
+        val studentEnroll = inf.findViewById<EditText>(R.id.student_enroll)
+        studentEnroll.setText(studentData?.enroll)
+        val studentEmail = inf.findViewById<EditText>(R.id.student_email)
+        studentEmail.setText(studentData?.email)
+
+        studentEmail.isEnabled = isUserAdmin == true
+
+        val studentPhone = inf.findViewById<EditText>(R.id.student_phone)
+        studentPhone.setText(studentData?.phone)
+        val student10thAggregate = inf.findViewById<EditText>(R.id.student_10th_aggregate)
+        student10thAggregate.setText(studentData?.aggregate_10th)
+        val student12thAggregate = inf.findViewById<EditText>(R.id.student_12th_aggregate)
+        student12thAggregate.setText(studentData?.aggregate_12th)
+        val studentCollegeAggregate = inf.findViewById<EditText>(R.id.student_college_aggregate)
+        studentCollegeAggregate.setText(studentData?.aggregate_college)
+
+        val studentSubmitBtn = inf.findViewById<Button>(R.id.student_submit_button)
+        studentSubmitBtn.setOnClickListener {
+            // TODO if student not in database check
+            val student = Student(
+                studentEmail.text.toString(),
+                studentName.text.toString(),
+                studentEnroll.text.toString(),
+                studentPhone.text.toString(),
+                student10thAggregate.text.toString(),
+                student12thAggregate.text.toString(),
+                studentCollegeAggregate.text.toString()
+            )
+            dbTPCellDatabase.addStudentObject(context, student)
+        }
+        return inf
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -63,38 +97,22 @@ class StudentDetailsFragment : Fragment() {
         listener = null
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     *
-     *
-     * See the Android Training lesson [Communicating with Other Fragments]
-     * (http://developer.android.com/training/basics/fragments/communicating.html)
-     * for more information.
-     */
     interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment StudentDetailsFragment.
-         */
-        // TODO: Rename and change types and number of parameters
+
+        const val IS_USER_ADMIN = "is-user-admin"
+        const val STUDENT_OBJECT = "student-object"
+
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
+        fun newInstance(isUserAdmin: Boolean, studentData: Student) =
             StudentDetailsFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+                    putBoolean(IS_USER_ADMIN, isUserAdmin)
+                    putParcelable(STUDENT_OBJECT, studentData)
                 }
             }
     }
