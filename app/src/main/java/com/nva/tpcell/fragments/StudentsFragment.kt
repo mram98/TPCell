@@ -24,16 +24,16 @@ import com.nva.tpcell.utils.TPCellDatabase
  */
 class StudentsFragment : Fragment() {
 
-    // TODO: Customize parameters
     private var isUserAdmin = false
+    private var driveName: String? = null
     private var listener: OnListFragmentInteractionListener? = null
     private var adapterStudent: StudentFirestoreRecyclerAdapter? = null
 
-    lateinit var options: FirestoreRecyclerOptions<Student>
-    lateinit var recyclerView: RecyclerView
-    lateinit var fabButton: FloatingActionButton
+    private lateinit var options: FirestoreRecyclerOptions<Student>
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var fabButton: FloatingActionButton
 
-    var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
 
     lateinit var studentDetailsFragment: StudentDetailsFragment
 
@@ -42,6 +42,7 @@ class StudentsFragment : Fragment() {
 
         arguments?.let {
             isUserAdmin = it.getBoolean(IS_USER_ADMIN)
+            driveName = it.getString(DRIVE_NAME)
         }
     }
 
@@ -52,26 +53,27 @@ class StudentsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_students_list, container, false)
 
         // Getting Query and making Adapter Class
-        val query = dbTPCellDatabase.getStudentsList()
+        val query = dbTPCellDatabase.getStudentsList(driveName)
         options =
             FirestoreRecyclerOptions.Builder<Student>().setQuery(query, Student::class.java).build()
         adapterStudent = StudentFirestoreRecyclerAdapter(options)
 
         // Binding Query to Adapter
-        recyclerView = view.findViewById<RecyclerView>(R.id.students_list)
+        recyclerView = view.findViewById(R.id.students_list)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapterStudent
 
-        fabButton = view.findViewById<FloatingActionButton>(R.id.button_add_student)
+        fabButton = view.findViewById(R.id.button_add_student)
         if (isUserAdmin) {
             (fabButton as View).visibility = View.VISIBLE
         } else {
             (fabButton as View).visibility = View.INVISIBLE
         }
-        fabButton.setOnClickListener { view ->
+        fabButton.setOnClickListener {
+            // view ->
             // Open StudentDetailsFragment with no data
             studentDetailsFragment = StudentDetailsFragment.newInstance(isUserAdmin, Student())
-            // TODO Null Forced
+            // Null Forced
             fragmentManager!!
                 .beginTransaction()
                 .replace(R.id.container, studentDetailsFragment)
@@ -88,7 +90,7 @@ class StudentsFragment : Fragment() {
         if (context is OnListFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnListFragmentInteractionListener")
         }
     }
 
@@ -125,7 +127,7 @@ class StudentsFragment : Fragment() {
                     // Start StudentDetailsFragment with student obj as parcelable
                     studentDetailsFragment =
                         StudentDetailsFragment.newInstance(isUserAdmin, student)
-                    // TODO Null Forced
+                    // Null Forced
                     fragmentManager!!
                         .beginTransaction()
                         .replace(R.id.container, studentDetailsFragment)
@@ -173,21 +175,20 @@ class StudentsFragment : Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onListFragmentInteraction(item: Student?)
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val IS_USER_ADMIN = "is-user-admin"
+        const val DRIVE_NAME = "drive-name"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
-        fun newInstance(isUserAdmin: Boolean) =
+        fun newInstance(isUserAdmin: Boolean, driveName: String?) =
             StudentsFragment().apply {
                 arguments = Bundle().apply {
                     putBoolean(IS_USER_ADMIN, isUserAdmin)
+                    putString(DRIVE_NAME, driveName)
                 }
             }
     }

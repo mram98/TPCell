@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.nva.tpcell.R
 import com.nva.tpcell.models.Drive
 import com.nva.tpcell.utils.TPCellDatabase
@@ -26,7 +27,7 @@ class DriveDetailsFragment : Fragment() {
     private var driveData: Drive? = null
     private var isUserAdmin: Boolean? = null
     private var listener: OnFragmentInteractionListener? = null
-    var dbTPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase = TPCellDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +35,7 @@ class DriveDetailsFragment : Fragment() {
             isUserAdmin = it.getBoolean(IS_USER_ADMIN)
             driveData = it.getParcelable(DRIVE_OBJECT)
         }
+
     }
 
     override fun onCreateView(
@@ -48,11 +50,11 @@ class DriveDetailsFragment : Fragment() {
         val driveDesc = inf.findViewById<EditText>(R.id.drive_desc)
         driveDesc.setText(driveData?.desc)
         val drive10thAggregate = inf.findViewById<EditText>(R.id.drive_10th_aggregate)
-        drive10thAggregate.setText(driveData?.aggregate_10th)
+        drive10thAggregate.setText(driveData?.aggregate_10th.toString())
         val drive12thAggregate = inf.findViewById<EditText>(R.id.drive_12th_aggregate)
-        drive12thAggregate.setText(driveData?.aggregate_12th)
+        drive12thAggregate.setText(driveData?.aggregate_12th.toString())
         val driveCollegeAggregate = inf.findViewById<EditText>(R.id.drive_college_aggregate)
-        driveCollegeAggregate.setText(driveData?.aggregate_college)
+        driveCollegeAggregate.setText(driveData?.aggregate_college.toString())
 
         val driveSubmitBtn = inf.findViewById<Button>(R.id.drive_submit_button)
         driveSubmitBtn.setOnClickListener {
@@ -60,16 +62,23 @@ class DriveDetailsFragment : Fragment() {
             val drive = Drive(
                 driveName.text.toString(),
                 driveDesc.text.toString(),
-                drive10thAggregate.text.toString(),
-                drive12thAggregate.text.toString(),
-                driveCollegeAggregate.text.toString()
+                drive10thAggregate.text.toString().toInt(),
+                drive12thAggregate.text.toString().toInt(),
+                driveCollegeAggregate.text.toString().toInt()
             )
             dbTPCellDatabase.addDriveObject(context, drive)
         }
         val driveEligibleBtn = inf.findViewById<Button>(R.id.drive_eligible_button)
         driveEligibleBtn.setOnClickListener {
+            // View Eligible Students
+            val studentsFragment = StudentsFragment.newInstance(isUserAdmin!!, driveData?.name!!)
+            fragmentManager!!
+                .beginTransaction()
+                .replace(R.id.container, studentsFragment)
+                .addToBackStack(studentsFragment.toString())
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commit()
 
-            // TODO View Eligible Students
         }
 
         // If user is not admin, make everything non editable
@@ -85,10 +94,9 @@ class DriveDetailsFragment : Fragment() {
         return inf
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -105,7 +113,6 @@ class DriveDetailsFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 

@@ -7,24 +7,24 @@ data class Drive(
     //only email compulsory for now, may change later
     val name: String = "",
     val desc: String = "",
-    val aggregate_10th: String = "",
-    val aggregate_12th: String = "",
-    val aggregate_college: String = ""
+    val aggregate_10th: Int = 0,
+    val aggregate_12th: Int = 0,
+    val aggregate_college: Int = 0
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),
         parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)
         parcel.writeString(desc)
-        parcel.writeString(aggregate_10th)
-        parcel.writeString(aggregate_12th)
-        parcel.writeString(aggregate_college)
+        parcel.writeInt(aggregate_10th)
+        parcel.writeInt(aggregate_12th)
+        parcel.writeInt(aggregate_college)
     }
 
     override fun describeContents(): Int {
@@ -40,5 +40,4 @@ data class Drive(
             return arrayOfNulls(size)
         }
     }
-
 }

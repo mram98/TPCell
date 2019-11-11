@@ -9,9 +9,9 @@ data class Student(
     val name: String = "",
     val enroll: String = "",
     val phone: String = "",
-    val aggregate_10th: String = "",
-    val aggregate_12th: String = "",
-    val aggregate_college: String = ""
+    val aggregate_10th: Int = 0,
+    val aggregate_12th: Int = 0,
+    val aggregate_college: Int = 0
 
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
@@ -19,9 +19,9 @@ data class Student(
         parcel.readString(),
         parcel.readString(),
         parcel.readString(),
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readString()
+        parcel.readInt(),
+        parcel.readInt(),
+        parcel.readInt()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
@@ -29,9 +29,9 @@ data class Student(
         parcel.writeString(name)
         parcel.writeString(enroll)
         parcel.writeString(phone)
-        parcel.writeString(aggregate_10th)
-        parcel.writeString(aggregate_12th)
-        parcel.writeString(aggregate_college)
+        parcel.writeInt(aggregate_10th)
+        parcel.writeInt(aggregate_12th)
+        parcel.writeInt(aggregate_college)
     }
 
     override fun describeContents(): Int {

@@ -26,16 +26,15 @@ import com.nva.tpcell.utils.TPCellDatabase
 
 class DrivesFragment : Fragment() {
 
-    // TODO: Customize parameters
     private var isUserAdmin = false
     private var listener: OnListFragmentInteractionListener? = null
     private var adapterDrive: DriveFirestoreRecyclerAdapter? = null
 
-    lateinit var options: FirestoreRecyclerOptions<Drive>
-    lateinit var recyclerView: RecyclerView
-    lateinit var fabButton: FloatingActionButton
+    private lateinit var options: FirestoreRecyclerOptions<Drive>
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var fabButton: FloatingActionButton
 
-    var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
 
     lateinit var driveDetailsFragment: DriveDetailsFragment
 
@@ -60,20 +59,21 @@ class DrivesFragment : Fragment() {
         adapterDrive = DriveFirestoreRecyclerAdapter(options)
 
         // Binding Query to Adapter
-        recyclerView = view.findViewById<RecyclerView>(R.id.drives_list)
+        recyclerView = view.findViewById(R.id.drives_list)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapterDrive
 
-        fabButton = view.findViewById<FloatingActionButton>(R.id.button_add_drive)
+        fabButton = view.findViewById(R.id.button_add_drive)
         if (isUserAdmin) {
             (fabButton as View).visibility = View.VISIBLE
         } else {
             (fabButton as View).visibility = View.INVISIBLE
         }
-        fabButton.setOnClickListener { view ->
+        fabButton.setOnClickListener {
+            //view ->
             // Open DriveDetailsFragment with no data
             driveDetailsFragment = DriveDetailsFragment.newInstance(isUserAdmin, Drive())
-            // TODO Null Forced
+            //  Null Forced
             fragmentManager!!
                 .beginTransaction()
                 .replace(R.id.container, driveDetailsFragment)
@@ -90,7 +90,7 @@ class DrivesFragment : Fragment() {
         if (context is OnListFragmentInteractionListener) {
             listener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement OnListFragmentInteractionListener")
+            throw RuntimeException("$context must implement OnListFragmentInteractionListener")
         }
     }
 
@@ -125,7 +125,7 @@ class DrivesFragment : Fragment() {
                 override fun onDriveItemClickListener(view: View, pos: Int) {
                     // Start DriveDetailsFragment with drive obj as parcelable
                     driveDetailsFragment = DriveDetailsFragment.newInstance(isUserAdmin, drive)
-                    // TODO Null Forced
+                    //  Null Forced
                     fragmentManager!!
                         .beginTransaction()
                         .replace(R.id.container, driveDetailsFragment)
@@ -173,16 +173,13 @@ class DrivesFragment : Fragment() {
     }
 
     interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onListFragmentInteraction(item: Drive?)
     }
 
     companion object {
 
-        // TODO: Customize parameter argument names
         const val IS_USER_ADMIN = "is-user-admin"
 
-        // TODO: Customize parameter initialization
         @JvmStatic
         fun newInstance(isUserAdmin: Boolean) =
             DrivesFragment().apply {

@@ -14,26 +14,13 @@ import com.nva.tpcell.models.Student
 import java.io.Serializable
 
 class TPCellDatabase {
-    val db = FirebaseFirestore.getInstance()
-    val dbStudentsRef = db.collection("students")
-    val dbAdminsRef = db.collection("admins")
-    val dbDrivesRef = db.collection("drives")
-    var isUserAdmin: Boolean = false
+    private val db = FirebaseFirestore.getInstance()
+    private val dbStudentsRef = db.collection("students")
+    private val dbAdminsRef = db.collection("admins")
+    private val dbDrivesRef = db.collection("drives")
+    private var isUserAdmin: Boolean = false
 
     var studentData: Student? = null
-
-    val stringStudentFields = arrayOf(
-        "email",
-        "institute_id",
-        "session_year",
-        "enroll",
-        "name",
-        "course",
-        "branch",
-        "phone"
-    )
-    val numberStudentFields =
-        arrayOf("aggregate_10th", "aggregate_12th", "aggregate_college", "backlog", "gap_years")
 
     private fun unpackStudent(student: Student): HashMap<String, Serializable?> {
         // Converts object to HashMap
@@ -98,37 +85,14 @@ class TPCellDatabase {
             }
     }
 
-    fun updateStudent(context: Context, student: Student) {
-
-        // Delete the original document
-//        dbStudentsRef.document(student.email)
-//            .delete()
-//            .addOnSuccessListener {
-//                // Add the student again if deletion is successful
-//                addStudent(context, student)
-//            }
-//            .addOnFailureListener {
-//                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
-//            }
-
-        // TODO Fix Double Toast here
-        deleteStudent(context, student.email)
-        addStudentObject(context, student)
-
-    }
-
-    fun updateStudentField(field: String, value: String) {
-
-    }
-
     fun checkAdmin(context: Context, email: String?) {
 
         if (email != null) {
             dbAdminsRef.document(email).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        var isUserAdmin_str = document.get("is_admin")
-                        if (isUserAdmin_str == "y") {
+                        val isUserAdminStr = document.get("is_admin")
+                        if (isUserAdminStr == "y") {
                             isUserAdmin = true
                         }
                     }
@@ -145,33 +109,14 @@ class TPCellDatabase {
         return dbDrivesRef.orderBy("name", Query.Direction.ASCENDING)
     }
 
-    fun getStudentsList(): Query {
-        return dbStudentsRef.orderBy("name", Query.Direction.ASCENDING)
-    }
+    fun getStudentsList(driveName: String?): Query {
 
-    fun filterStudent(
-        aggregate_10th: Number,
-        aggregate_12th: Number,
-        aggregate_college: Number,
-        backlog: Number,
-        gap_years: Number
-    ) {
-
-        // Potentially add branch and course here
-        val query = dbStudentsRef.whereGreaterThanOrEqualTo("aggregate_10th", aggregate_10th)
-            .whereGreaterThanOrEqualTo("aggregate_12th", aggregate_12th)
-            .whereGreaterThanOrEqualTo("aggregate_college", aggregate_college)
-            .whereGreaterThanOrEqualTo("backlog", backlog)
-            .whereGreaterThanOrEqualTo("gap_years", gap_years)
-
-        //Execute Query
-        query.get()
-            .addOnSuccessListener { documents ->
-                // TODO Show this stuff in admin list of students recycler̥̥
-                for (document in documents) {
-                    Log.d(TAG, "${document.id} => ${document.data}")
-                }
-            }
+        return if (driveName == null) {
+            dbStudentsRef.orderBy("name", Query.Direction.ASCENDING)
+        } else {
+            dbDrivesRef.document(driveName).collection("eligible")
+                .orderBy("name", Query.Direction.ASCENDING)
+        }
     }
 
     fun getStudent(context: Context, email: String?) {
@@ -181,7 +126,6 @@ class TPCellDatabase {
                 .get()
                 .addOnSuccessListener { documentSnapshot ->
                     studentData = documentSnapshot.toObject(Student::class.java)
-                    // TODO get this data to the student fragment
                 }
                 .addOnFailureListener {
                     Toast.makeText(context, "Student doesn't exist", Toast.LENGTH_LONG).show()
@@ -195,8 +139,8 @@ class TPCellDatabase {
             dbAdminsRef.document(email).get()
                 .addOnSuccessListener { document ->
                     if (document != null) {
-                        var isUserAdmin_str = document.get("is_admin")
-                        isUserAdmin = isUserAdmin_str == "y"
+                        val isUserAdminStr = document.get("is_admin")
+                        isUserAdmin = isUserAdminStr == "y"
 
                         val intent = Intent(context, MainActivity::class.java)
                         intent.putExtra("is-user-admin", isUserAdmin)

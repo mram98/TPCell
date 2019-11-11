@@ -15,11 +15,11 @@ import com.nva.tpcell.utils.TPCellDatabase
 
 class LoginActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
-    lateinit var auth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
 
-    var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
 
-    fun showSnackbar(id: Int) {
+    private fun showSnackbar(id: Int) {
         Snackbar.make(
             findViewById(R.id.login_container),
             resources.getString(id),

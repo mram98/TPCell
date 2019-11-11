@@ -41,18 +41,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     }
 
-    lateinit var studentsFragment: StudentsFragment
-    lateinit var drivesFragment: DrivesFragment
-    lateinit var studentDetailsFragment: StudentDetailsFragment
-    lateinit var driveDetailsFragment: DriveDetailsFragment
+    private lateinit var studentsFragment: StudentsFragment
+    private lateinit var drivesFragment: DrivesFragment
+    private lateinit var studentDetailsFragment: StudentDetailsFragment
 
-    var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
-    var user: FirebaseUser? = null
-    var userData: Student? = null
+    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var user: FirebaseUser? = null
 
-    var isUserAdmin: Boolean = false
-
-//    lateinit var settingsFragment: SettingsFragment
+    private var isUserAdmin: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +57,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setSupportActionBar(toolbar)
 
         val bundle: Bundle? = intent.extras
-        var isUserAdmin_ARG = bundle?.getBoolean("is-user-admin")
-        if (isUserAdmin_ARG != null) {
-            isUserAdmin = isUserAdmin_ARG
+        val isUserAdminARG = bundle?.getBoolean("is-user-admin")
+        if (isUserAdminARG != null) {
+            isUserAdmin = isUserAdminARG
         }
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -84,10 +80,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Identifying User
         user = FirebaseAuth.getInstance().currentUser
 
-        // TODO this function doesn't work
-
-        //dbTPCellDatabase.checkAdmin(this, user?.email)
-        //dbTPCellDatabase.getStudent(this, user?.email)
 
         // Getting Nav Header TextViews
         val navHeaderView = navView.getHeaderView(0)
@@ -104,8 +96,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val drivesMenuItem = navView.menu.findItem(R.id.nav_drives)
 
 
-        // If user is an Admin, change Nav Menu Items and create StudentsFragment,
-        // else create StudentDetailsFragment with current user data
+        // If user is an Admin, change Nav Menu Items
+        // else get current user data and change Nav Menu Items
         if (isUserAdmin) {
             studentsMenuItem.isVisible = true
             profileMenuItem.isVisible = false
@@ -115,9 +107,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             profileMenuItem.isVisible = true
 
             dbTPCellDatabase.getStudent(this, user?.email)
-            //studentDetailsFragment = StudentDetailsFragment.newInstance(userData?)
         }
-
 
         // Default Menu Item is Drives, if activity just launched, select drives menu and launch its fragment
         drivesFragment = DrivesFragment.newInstance(isUserAdmin)
@@ -173,7 +163,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_students -> {
 
-                studentsFragment = StudentsFragment.newInstance(isUserAdmin)
+                studentsFragment = StudentsFragment.newInstance(isUserAdmin, null)
 
                 if (isUserAdmin) {
                     supportFragmentManager
@@ -189,9 +179,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 if ((!isUserAdmin) && (user?.email != null)) {
 
-                    var studentDataArg: Student? = null
-
-                    studentDataArg = if (dbTPCellDatabase.studentData == null) {
+                    val studentDataArg = if (dbTPCellDatabase.studentData == null) {
                         Student(user?.email!!)
                     } else {
                         dbTPCellDatabase.studentData

@@ -26,7 +26,7 @@ class StudentDetailsFragment : Fragment() {
     private var studentData: Student? = null
     private var isUserAdmin: Boolean? = null
     private var listener: OnFragmentInteractionListener? = null
-    var dbTPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase = TPCellDatabase()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,11 +55,11 @@ class StudentDetailsFragment : Fragment() {
         val studentPhone = inf.findViewById<EditText>(R.id.student_phone)
         studentPhone.setText(studentData?.phone)
         val student10thAggregate = inf.findViewById<EditText>(R.id.student_10th_aggregate)
-        student10thAggregate.setText(studentData?.aggregate_10th)
+        student10thAggregate.setText(studentData?.aggregate_10th.toString())
         val student12thAggregate = inf.findViewById<EditText>(R.id.student_12th_aggregate)
-        student12thAggregate.setText(studentData?.aggregate_12th)
+        student12thAggregate.setText(studentData?.aggregate_12th.toString())
         val studentCollegeAggregate = inf.findViewById<EditText>(R.id.student_college_aggregate)
-        studentCollegeAggregate.setText(studentData?.aggregate_college)
+        studentCollegeAggregate.setText(studentData?.aggregate_college.toString())
 
         val studentSubmitBtn = inf.findViewById<Button>(R.id.student_submit_button)
         studentSubmitBtn.setOnClickListener {
@@ -69,19 +69,18 @@ class StudentDetailsFragment : Fragment() {
                 studentName.text.toString(),
                 studentEnroll.text.toString(),
                 studentPhone.text.toString(),
-                student10thAggregate.text.toString(),
-                student12thAggregate.text.toString(),
-                studentCollegeAggregate.text.toString()
+                student10thAggregate.text.toString().toInt(),
+                student12thAggregate.text.toString().toInt(),
+                studentCollegeAggregate.text.toString().toInt()
             )
             dbTPCellDatabase.addStudentObject(context, student)
         }
         return inf
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    fun onButtonPressed(uri: Uri) {
-        listener?.onFragmentInteraction(uri)
-    }
+//    fun onButtonPressed(uri: Uri) {
+//        listener?.onFragmentInteraction(uri)
+//    }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -98,7 +97,6 @@ class StudentDetailsFragment : Fragment() {
     }
 
     interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         fun onFragmentInteraction(uri: Uri)
     }
 
