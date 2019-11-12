@@ -38,11 +38,6 @@ class LoginActivity : AppCompatActivity() {
             dbTPCellDatabase.startLogin(this, user?.email)
             showSnackbar(R.string.signed_in)
 
-//            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-//            intent.putExtra("is-user-admin",dbTPCellDatabase.isUserAdmin)
-//            Toast.makeText(this,dbTPCellDatabase.isUserAdmin.toString(),Toast.LENGTH_LONG).show()
-//            startActivity(intent)
-//            finish()
         } else {
 
             // Firebase AuthUI Implementation
@@ -71,16 +66,8 @@ class LoginActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
 
                 val user = FirebaseAuth.getInstance().currentUser
-                dbTPCellDatabase.checkAdmin(this, user?.email)
                 dbTPCellDatabase.startLogin(this, user?.email)
                 showSnackbar(R.string.signed_in)
-//                // if the User sign in was successful, start Activity
-//                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-//                intent.putExtra("is-user-admin",dbTPCellDatabase.isUserAdmin)
-//                Toast.makeText(this,dbTPCellDatabase.isUserAdmin.toString(),Toast.LENGTH_LONG).show()
-//                startActivity(intent)
-//                showSnackbar(R.string.signed_in)
-//                finish()
                 return
             } else {
                 if (response == null) {

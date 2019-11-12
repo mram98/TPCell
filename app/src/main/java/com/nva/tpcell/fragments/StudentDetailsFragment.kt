@@ -63,7 +63,7 @@ class StudentDetailsFragment : Fragment() {
 
         val studentSubmitBtn = inf.findViewById<Button>(R.id.student_submit_button)
         studentSubmitBtn.setOnClickListener {
-            // TODO if student not in database check
+            // TODO Dialog box if student already in database, do you want to replace
             val student = Student(
                 studentEmail.text.toString(),
                 studentName.text.toString(),

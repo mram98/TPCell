@@ -4,12 +4,13 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Drive(
-    //only email compulsory for now, may change later
+    // Parcelable Drive data class
     val name: String = "",
     val desc: String = "",
     val aggregate_10th: Int = 0,
     val aggregate_12th: Int = 0,
     val aggregate_college: Int = 0
+
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readString(),

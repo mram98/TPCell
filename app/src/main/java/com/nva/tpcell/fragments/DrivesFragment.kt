@@ -63,6 +63,7 @@ class DrivesFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapterDrive
 
+        // Setting up FAB button
         fabButton = view.findViewById(R.id.button_add_drive)
         if (isUserAdmin) {
             (fabButton as View).visibility = View.VISIBLE

@@ -58,7 +58,7 @@ class DriveDetailsFragment : Fragment() {
 
         val driveSubmitBtn = inf.findViewById<Button>(R.id.drive_submit_button)
         driveSubmitBtn.setOnClickListener {
-            // TODO if drive not in database check
+            // TODO Dialog box if drive already in database, do you want to replace
             val drive = Drive(
                 driveName.text.toString(),
                 driveDesc.text.toString(),
@@ -69,16 +69,21 @@ class DriveDetailsFragment : Fragment() {
             dbTPCellDatabase.addDriveObject(context, drive)
         }
         val driveEligibleBtn = inf.findViewById<Button>(R.id.drive_eligible_button)
-        driveEligibleBtn.setOnClickListener {
-            // View Eligible Students
-            val studentsFragment = StudentsFragment.newInstance(isUserAdmin!!, driveData?.name!!)
-            fragmentManager!!
-                .beginTransaction()
-                .replace(R.id.container, studentsFragment)
-                .addToBackStack(studentsFragment.toString())
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .commit()
-
+        // if driveData is empty, then disable Eligible button
+        if ((driveData?.name == "") || (driveData?.name == null)) {
+            driveEligibleBtn.isEnabled = false
+        } else {
+            driveEligibleBtn.setOnClickListener {
+                // View Eligible Students
+                val studentsFragment =
+                    StudentsFragment.newInstance(isUserAdmin!!, driveData?.name!!)
+                fragmentManager!!
+                    .beginTransaction()
+                    .replace(R.id.container, studentsFragment)
+                    .addToBackStack(studentsFragment.toString())
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .commit()
+            }
         }
 
         // If user is not admin, make everything non editable

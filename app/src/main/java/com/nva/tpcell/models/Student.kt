@@ -5,6 +5,7 @@ import android.os.Parcelable
 
 
 data class Student(
+    // Parcelable Student data class
     val email: String = "",
     val name: String = "",
     val enroll: String = "",

@@ -63,6 +63,7 @@ class StudentsFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapterStudent
 
+        // Setting up FAB button
         fabButton = view.findViewById(R.id.button_add_student)
         if (isUserAdmin) {
             (fabButton as View).visibility = View.VISIBLE
