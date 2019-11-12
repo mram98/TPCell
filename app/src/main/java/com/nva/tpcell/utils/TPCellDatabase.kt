@@ -4,6 +4,7 @@ import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.util.Patterns
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
@@ -49,36 +50,104 @@ class TPCellDatabase {
     fun addStudentObject(context: Context?, student: Student) {
         // Adds Student to the database
 
-        val studentData = unpackStudent(student)
+        if (validateStudent(student)) {
 
-        // Writing document with email as ID and HashMap as data
-        dbStudentsRef.document(student.email.toLowerCase(Locale.getDefault()))
-            .set(studentData)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-                // End the fragment
-                (context as MainActivity).supportFragmentManager.popBackStack()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
-            }
+            val studentData = unpackStudent(student)
+
+            // Writing document with email as ID and HashMap as data
+            dbStudentsRef.document(student.email.toLowerCase(Locale.getDefault()))
+                .set(studentData)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                    // End the fragment
+                    (context as MainActivity).supportFragmentManager.popBackStack()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
+                }
+        } else {
+            Toast.makeText(context, "Invalid Data", Toast.LENGTH_LONG).show()
+        }
+
+
+    }
+
+    private fun validateStudent(student: Student): Boolean {
+        // Validates data before adding to Database
+
+        val nameValid = student.name != ""
+        if (!nameValid) {
+            return false
+        }
+        val phoneValid = Patterns.PHONE.matcher(student.phone).matches()
+        if (!phoneValid) {
+            return false
+        }
+        val emailValid = Patterns.EMAIL_ADDRESS.matcher(student.email).matches()
+        if (!emailValid) {
+            return false
+        }
+        val aggregate10thValid = (0 < student.aggregate_10th) || (student.aggregate_10th < 100)
+        if (!aggregate10thValid) {
+            return false
+        }
+        val aggregate12thValid = (0 < student.aggregate_12th) || (student.aggregate_12th < 100)
+        if (!aggregate12thValid) {
+            return false
+        }
+        val aggregateCollegeValid =
+            (0 < student.aggregate_college) || (student.aggregate_college < 100)
+        if (!aggregateCollegeValid) {
+            return false
+        }
+        return true
     }
 
     fun addDriveObject(context: Context?, drive: Drive) {
         // Adds Drive to the database
-        val driveData = unpackDrive(drive)
 
-        // Writing document with name as ID and HashMap as data
-        dbDrivesRef.document(drive.name.toLowerCase(Locale.getDefault()))
-            .set(driveData)
-            .addOnSuccessListener {
-                Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-                // End the fragment
-                (context as MainActivity).supportFragmentManager.popBackStack()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
-            }
+        if (validateDrive(drive)) {
+            val driveData = unpackDrive(drive)
+
+            // Writing document with name as ID and HashMap as data
+            dbDrivesRef.document(drive.name.toLowerCase(Locale.getDefault()))
+                .set(driveData)
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                    // End the fragment
+                    (context as MainActivity).supportFragmentManager.popBackStack()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
+                }
+        } else {
+            Toast.makeText(context, "Invalid Data", Toast.LENGTH_LONG).show()
+        }
+
+
+    }
+
+    private fun validateDrive(drive: Drive): Boolean {
+        // Validates data before adding to Database
+
+        val nameValid = drive.name != ""
+        if (!nameValid) {
+            return false
+        }
+
+        val aggregate10thValid = (0 < drive.aggregate_10th) || (drive.aggregate_10th < 100)
+        if (!aggregate10thValid) {
+            return false
+        }
+        val aggregate12thValid = (0 < drive.aggregate_12th) || (drive.aggregate_12th < 100)
+        if (!aggregate12thValid) {
+            return false
+        }
+        val aggregateCollegeValid = (0 < drive.aggregate_college) || (drive.aggregate_college < 100)
+        if (!aggregateCollegeValid) {
+            return false
+        }
+        return true
     }
 
     fun deleteStudent(context: Context?, email: String?) {
