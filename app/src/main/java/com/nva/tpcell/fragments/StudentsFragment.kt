@@ -50,6 +50,13 @@ class StudentsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        if (driveName == null) {
+            activity?.title = "List of Students"
+        } else {
+            activity?.title = "List of Students for $driveName"
+        }
+
         val view = inflater.inflate(R.layout.fragment_students_list, container, false)
 
         // Getting Query and making Adapter Class

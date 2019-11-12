@@ -40,4 +40,9 @@
     <string name="phone_of_student">Phone</string>
     <string name="eligible_students">Eligible Students</string>
 
+    <string name="action_delete">Delete</string>
+    <string name="drive_details_logo">Drive Details Logo</string>
+    <string name="drive_details_header_background">Drive Details Header Background</string>
+
+
 </resources>

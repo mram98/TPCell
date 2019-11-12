@@ -3,9 +3,7 @@ package com.nva.tpcell.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
@@ -30,6 +28,7 @@ class StudentDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             isUserAdmin = it.getBoolean(IS_USER_ADMIN)
             studentData = it.getParcelable(STUDENT_OBJECT)
@@ -40,6 +39,9 @@ class StudentDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        activity?.title = "${studentData?.name}"
+
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.fragment_student_details, container, false)
 
@@ -98,6 +100,24 @@ class StudentDetailsFragment : Fragment() {
 
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if ((studentData?.name != "") && (studentData?.name != null)) {
+            inflater.inflate(R.menu.details, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return (when (item.itemId) {
+            R.id.action_delete -> {
+                dbTPCellDatabase.deleteStudent(context, studentData?.email)
+                return true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        })
     }
 
     companion object {

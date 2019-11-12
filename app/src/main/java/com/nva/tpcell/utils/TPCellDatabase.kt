@@ -56,6 +56,8 @@ class TPCellDatabase {
             .set(studentData)
             .addOnSuccessListener {
                 Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                // End the fragment
+                (context as MainActivity).supportFragmentManager.popBackStack()
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
@@ -71,34 +73,44 @@ class TPCellDatabase {
             .set(driveData)
             .addOnSuccessListener {
                 Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                // End the fragment
+                (context as MainActivity).supportFragmentManager.popBackStack()
             }
             .addOnFailureListener {
                 Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
             }
     }
 
-    fun deleteStudent(context: Context, email: String) {
+    fun deleteStudent(context: Context?, email: String?) {
         // Deletes a Student from the Database
-        dbStudentsRef.document(email.toLowerCase(Locale.getDefault()))
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
-            }
+        if ((email != "") && (email != null)) {
+            dbStudentsRef.document(email.toLowerCase(Locale.getDefault()))
+                .delete()
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                    // End the fragment
+                    (context as MainActivity).supportFragmentManager.popBackStack()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
+                }
+        }
     }
 
-    fun deleteDrive(context: Context, name: String) {
+    fun deleteDrive(context: Context?, name: String?) {
         // Deletes a Drive from the Database
-        dbDrivesRef.document(name.toLowerCase(Locale.getDefault()))
-            .delete()
-            .addOnSuccessListener {
-                Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
-            }
-            .addOnFailureListener {
-                Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
-            }
+        if ((name != "") && (name != null)) {
+            dbDrivesRef.document(name.toLowerCase(Locale.getDefault()))
+                .delete()
+                .addOnSuccessListener {
+                    Toast.makeText(context, "Success", Toast.LENGTH_LONG).show()
+                    // End the fragment
+                    (context as MainActivity).supportFragmentManager.popBackStack()
+                }
+                .addOnFailureListener {
+                    Toast.makeText(context, "Failed", Toast.LENGTH_LONG).show()
+                }
+        }
     }
 
     fun getStudentsList(driveName: String?): Query {

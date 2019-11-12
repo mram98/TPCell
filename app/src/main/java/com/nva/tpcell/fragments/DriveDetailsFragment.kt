@@ -3,9 +3,7 @@ package com.nva.tpcell.fragments
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import androidx.fragment.app.Fragment
@@ -31,6 +29,7 @@ class DriveDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
         arguments?.let {
             isUserAdmin = it.getBoolean(IS_USER_ADMIN)
             driveData = it.getParcelable(DRIVE_OBJECT)
@@ -42,6 +41,9 @@ class DriveDetailsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        activity?.title = "${driveData?.name}"
+
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.fragment_drive_details, container, false)
 
@@ -119,6 +121,24 @@ class DriveDetailsFragment : Fragment() {
 
     interface OnFragmentInteractionListener {
         fun onFragmentInteraction(uri: Uri)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (isUserAdmin == true) {
+            inflater.inflate(R.menu.details, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return (when (item.itemId) {
+            R.id.action_delete -> {
+                dbTPCellDatabase.deleteDrive(context, driveData?.name)
+                return true
+            }
+            else ->
+                super.onOptionsItemSelected(item)
+        })
     }
 
     companion object {

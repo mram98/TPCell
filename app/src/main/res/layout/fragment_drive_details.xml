@@ -27,12 +27,14 @@
                     android:focusable="true"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_drives_black_24dp"
+                    android:contentDescription="@string/drive_details_logo"
                     android:tint="#bababa" />
 
             <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="120dp"
                     android:background="@color/colorPrimaryDark"
+                    android:contentDescription="@string/drive_details_header_background"
                     android:scaleType="centerCrop" />
 
         </RelativeLayout>

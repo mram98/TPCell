@@ -50,6 +50,9 @@ class DrivesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        activity?.title = "List of Drives"
+
         val view = inflater.inflate(R.layout.fragment_drives_list, container, false)
 
         // Getting Query and making Adapter Class
