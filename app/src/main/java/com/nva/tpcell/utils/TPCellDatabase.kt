@@ -187,7 +187,7 @@ class TPCellDatabase {
         return if (driveName == null) {
             dbStudentsRef.orderBy("name", Query.Direction.ASCENDING)
         } else {
-            dbDrivesRef.document(driveName).collection("eligible")
+            dbDrivesRef.document(driveName.toLowerCase(Locale.getDefault())).collection("eligible")
                 .orderBy("name", Query.Direction.ASCENDING)
         }
     }

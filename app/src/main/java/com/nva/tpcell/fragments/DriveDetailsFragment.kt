@@ -78,7 +78,7 @@ class DriveDetailsFragment : Fragment() {
             driveEligibleBtn.setOnClickListener {
                 // View Eligible Students
                 val studentsFragment =
-                    StudentsFragment.newInstance(isUserAdmin!!, driveData?.name!!)
+                    StudentsFragment.newInstance(isUserAdmin!!, driveData?.name)
                 fragmentManager!!
                     .beginTransaction()
                     .replace(R.id.container, studentsFragment)
