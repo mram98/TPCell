@@ -9,7 +9,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.nva.tpcell.R
 import com.nva.tpcell.models.Student
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 /**
  * A simple [Fragment] subclass.
@@ -24,7 +24,7 @@ class StudentDetailsFragment : Fragment() {
     private var studentData: Student? = null
     private var isUserAdmin: Boolean? = null
     private var listener: OnFragmentInteractionListener? = null
-    private var dbTPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase = Database()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,11 +40,13 @@ class StudentDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        // Setting Fragment Title
         activity?.title = "${studentData?.name}"
 
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.fragment_student_details, container, false)
 
+        // EditTexts Initialization
         val studentName = inf.findViewById<EditText>(R.id.student_name)
         studentName.setText(studentData?.name)
         val studentEnroll = inf.findViewById<EditText>(R.id.student_enroll)
@@ -52,6 +54,7 @@ class StudentDetailsFragment : Fragment() {
         val studentEmail = inf.findViewById<EditText>(R.id.student_email)
         studentEmail.setText(studentData?.email)
 
+        // Only Admins can edit Students emails
         studentEmail.isEnabled = isUserAdmin == true
 
         val studentPhone = inf.findViewById<EditText>(R.id.student_phone)
@@ -63,6 +66,7 @@ class StudentDetailsFragment : Fragment() {
         val studentCollegeAggregate = inf.findViewById<EditText>(R.id.student_college_aggregate)
         studentCollegeAggregate.setText(studentData?.aggregate_college.toString())
 
+        // Buttons Initialization
         val studentSubmitBtn = inf.findViewById<Button>(R.id.student_submit_button)
         studentSubmitBtn.setOnClickListener {
             // TODO Dialog box if student already in database, do you want to replace

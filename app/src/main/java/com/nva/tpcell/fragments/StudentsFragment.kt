@@ -15,7 +15,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nva.tpcell.R
 import com.nva.tpcell.models.Student
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 /**
  * A fragment representing a list of Items.
@@ -33,7 +33,7 @@ class StudentsFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabButton: FloatingActionButton
 
-    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbDatabase: Database = Database()
 
     lateinit var studentDetailsFragment: StudentDetailsFragment
 
@@ -51,6 +51,7 @@ class StudentsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        // Setting Fragment Title
         if (driveName == null) {
             activity?.title = "List of Students"
         } else {
@@ -60,7 +61,7 @@ class StudentsFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_students_list, container, false)
 
         // Getting Query and making Adapter Class
-        val query = dbTPCellDatabase.getStudentsList(driveName)
+        val query = dbDatabase.getStudentsList(driveName)
         options =
             FirestoreRecyclerOptions.Builder<Student>().setQuery(query, Student::class.java).build()
         adapterStudent = StudentFirestoreRecyclerAdapter(options)
@@ -78,10 +79,8 @@ class StudentsFragment : Fragment() {
             (fabButton as View).visibility = View.INVISIBLE
         }
         fabButton.setOnClickListener {
-            // view ->
             // Open StudentDetailsFragment with no data
             studentDetailsFragment = StudentDetailsFragment.newInstance(isUserAdmin, Student())
-            // Null Forced
             fragmentManager!!
                 .beginTransaction()
                 .replace(R.id.container, studentDetailsFragment)
@@ -135,7 +134,6 @@ class StudentsFragment : Fragment() {
                     // Start StudentDetailsFragment with student obj as parcelable
                     studentDetailsFragment =
                         StudentDetailsFragment.newInstance(isUserAdmin, student)
-                    // Null Forced
                     fragmentManager!!
                         .beginTransaction()
                         .replace(R.id.container, studentDetailsFragment)

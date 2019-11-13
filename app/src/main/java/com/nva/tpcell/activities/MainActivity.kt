@@ -22,7 +22,7 @@ import com.nva.tpcell.fragments.StudentDetailsFragment
 import com.nva.tpcell.fragments.StudentsFragment
 import com.nva.tpcell.models.Drive
 import com.nva.tpcell.models.Student
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener,
     StudentDetailsFragment.OnFragmentInteractionListener,
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private lateinit var drivesFragment: DrivesFragment
     private lateinit var studentDetailsFragment: StudentDetailsFragment
 
-    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbDatabase: Database = Database()
     private var user: FirebaseUser? = null
 
     private var isUserAdmin: Boolean = false
@@ -56,12 +56,14 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
+        // Getting if user is admin from Login Activity
         val bundle: Bundle? = intent.extras
         val isUserAdminARG = bundle?.getBoolean("is-user-admin")
         if (isUserAdminARG != null) {
             isUserAdmin = isUserAdminARG
         }
 
+        // NavDrawer Initialization
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
 
@@ -83,6 +85,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         // Getting Nav Header TextViews
         val navHeaderView = navView.getHeaderView(0)
+
         // Putting Email in Nav Header
         val navHeaderUserEmail: TextView = navHeaderView.findViewById(R.id.nav_user_email)
         val navHeaderUserName: TextView = navHeaderView.findViewById(R.id.nav_user_name)
@@ -106,10 +109,10 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             studentsMenuItem.isVisible = false
             profileMenuItem.isVisible = true
 
-            dbTPCellDatabase.getStudent(this, user?.email)
+            dbDatabase.getStudent(this, user?.email)
         }
 
-        // Default Menu Item is Drives, if activity just launched, select drives menu and launch its fragment
+        // Default Menu Item is Drives, if activity just launched, select drives menu and load its fragment
         drivesFragment = DrivesFragment.newInstance(isUserAdmin)
 
         if (savedInstanceState == null) {
@@ -151,6 +154,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_drives -> {
+
+                // Loading drivesFragment
                 drivesFragment = DrivesFragment.newInstance(isUserAdmin)
 
                 supportFragmentManager
@@ -163,6 +168,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_students -> {
 
+                // Loading studentsFragment
                 studentsFragment = StudentsFragment.newInstance(isUserAdmin, null)
 
                 if (isUserAdmin) {
@@ -179,11 +185,13 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 if ((!isUserAdmin) && (user?.email != null)) {
 
-                    val studentDataArg = if (dbTPCellDatabase.studentData == null) {
+                    val studentDataArg = if (dbDatabase.studentData == null) {
                         Student(user?.email!!)
                     } else {
-                        dbTPCellDatabase.studentData
+                        dbDatabase.studentData
                     }
+
+                    // Loading studentDetailsFragment
                     studentDetailsFragment =
                         StudentDetailsFragment.newInstance(
                             isUserAdmin,
@@ -202,12 +210,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.nav_settings -> {
 
+                // Not implemented, hidden in Nav Drawer
+
             }
             R.id.nav_logout -> {
 
+                // Sign out current user
                 val auth = FirebaseAuth.getInstance()
                 auth.signOut()
 
+                // Start Login Activity
                 val intent = Intent(this@MainActivity, LoginActivity::class.java)
                 startActivity(intent)
 

@@ -10,14 +10,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.nva.tpcell.BuildConfig
 import com.nva.tpcell.R
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 
 class LoginActivity : AppCompatActivity() {
     private val RC_SIGN_IN = 123
     private lateinit var auth: FirebaseAuth
 
-    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbDatabase: Database = Database()
 
     private fun showSnackbar(id: Int) {
         Snackbar.make(
@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
 
             //If user is signed in, start Activity
             val user = FirebaseAuth.getInstance().currentUser
-            dbTPCellDatabase.startLogin(this, user?.email)
+            dbDatabase.startLogin(this, user?.email)
             showSnackbar(R.string.signed_in)
 
         } else {
@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
 
                 val user = FirebaseAuth.getInstance().currentUser
-                dbTPCellDatabase.startLogin(this, user?.email)
+                dbDatabase.startLogin(this, user?.email)
                 showSnackbar(R.string.signed_in)
                 return
             } else {

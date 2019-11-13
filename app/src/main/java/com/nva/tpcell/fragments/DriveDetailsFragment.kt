@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.nva.tpcell.R
 import com.nva.tpcell.models.Drive
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 /**
  * A simple [Fragment] subclass.
@@ -25,7 +25,7 @@ class DriveDetailsFragment : Fragment() {
     private var driveData: Drive? = null
     private var isUserAdmin: Boolean? = null
     private var listener: OnFragmentInteractionListener? = null
-    private var dbTPCellDatabase = TPCellDatabase()
+    private var dbTPCellDatabase = Database()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +42,13 @@ class DriveDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        // Setting Fragment Title
         activity?.title = "${driveData?.name}"
 
         // Inflate the layout for this fragment
         val inf = inflater.inflate(R.layout.fragment_drive_details, container, false)
 
+        // EditTexts Initialization
         val driveName = inf.findViewById<EditText>(R.id.drive_name)
         driveName.setText(driveData?.name)
         val driveDesc = inf.findViewById<EditText>(R.id.drive_desc)
@@ -58,6 +60,7 @@ class DriveDetailsFragment : Fragment() {
         val driveCollegeAggregate = inf.findViewById<EditText>(R.id.drive_college_aggregate)
         driveCollegeAggregate.setText(driveData?.aggregate_college.toString())
 
+        // Buttons Initialization
         val driveSubmitBtn = inf.findViewById<Button>(R.id.drive_submit_button)
         driveSubmitBtn.setOnClickListener {
             // TODO Dialog box if drive already in database, do you want to replace
@@ -70,6 +73,7 @@ class DriveDetailsFragment : Fragment() {
             )
             dbTPCellDatabase.addDriveObject(context, drive)
         }
+
         val driveEligibleBtn = inf.findViewById<Button>(R.id.drive_eligible_button)
         // if driveData is empty, then disable Eligible button
         if ((driveData?.name == "") || (driveData?.name == null)) {

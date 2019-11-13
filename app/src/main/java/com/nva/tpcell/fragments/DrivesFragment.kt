@@ -15,7 +15,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.nva.tpcell.R
 import com.nva.tpcell.models.Drive
-import com.nva.tpcell.utils.TPCellDatabase
+import com.nva.tpcell.utils.Database
 
 
 /**
@@ -34,7 +34,7 @@ class DrivesFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var fabButton: FloatingActionButton
 
-    private var dbTPCellDatabase: TPCellDatabase = TPCellDatabase()
+    private var dbDatabase: Database = Database()
 
     lateinit var driveDetailsFragment: DriveDetailsFragment
 
@@ -51,12 +51,13 @@ class DrivesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
+        // Setting Fragment Title
         activity?.title = "List of Drives"
 
         val view = inflater.inflate(R.layout.fragment_drives_list, container, false)
 
         // Getting Query and making Adapter Class
-        val query = dbTPCellDatabase.getDrivesList()
+        val query = dbDatabase.getDrivesList()
         options =
             FirestoreRecyclerOptions.Builder<Drive>().setQuery(query, Drive::class.java).build()
         adapterDrive = DriveFirestoreRecyclerAdapter(options)
@@ -74,10 +75,8 @@ class DrivesFragment : Fragment() {
             (fabButton as View).visibility = View.INVISIBLE
         }
         fabButton.setOnClickListener {
-            //view ->
             // Open DriveDetailsFragment with no data
             driveDetailsFragment = DriveDetailsFragment.newInstance(isUserAdmin, Drive())
-            //  Null Forced
             fragmentManager!!
                 .beginTransaction()
                 .replace(R.id.container, driveDetailsFragment)
@@ -129,7 +128,6 @@ class DrivesFragment : Fragment() {
                 override fun onDriveItemClickListener(view: View, pos: Int) {
                     // Start DriveDetailsFragment with drive obj as parcelable
                     driveDetailsFragment = DriveDetailsFragment.newInstance(isUserAdmin, drive)
-                    //  Null Forced
                     fragmentManager!!
                         .beginTransaction()
                         .replace(R.id.container, driveDetailsFragment)

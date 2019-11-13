@@ -15,7 +15,7 @@ import com.nva.tpcell.models.Student
 import java.io.Serializable
 import java.util.*
 
-class TPCellDatabase {
+class Database {
     private val db = FirebaseFirestore.getInstance()
     private val dbStudentsRef = db.collection("students")
     private val dbAdminsRef = db.collection("admins")
